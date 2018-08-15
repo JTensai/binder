@@ -96,7 +96,7 @@
 	<Frame name="Binder_Title" hidden="true" frameStrata="LOW" parent="UIParent">
 		<Layers>
 			<Layer level="ARTWORK">
-				<FontString name="$parent_Text1" inherits="GameFontNormal" text="Binder 2.7.0">
+				<FontString name="$parent_Text1" inherits="GameFontNormal" text="Binder 2.7.1">
 					<Anchors>
 						<Anchor point="CENTER"></Anchor>
 					</Anchors>
@@ -915,7 +915,8 @@
 				</Scripts>
 			</Button>
 			
-			<Button name="KeyBound_Button" inherits="UIPanelButtonTemplate" text="Edit Keybinds">
+			<!-- disabled while feature is broken -->
+			<!-- <Button name="KeyBound_Button" inherits="UIPanelButtonTemplate" text="Edit Keybinds">
 				<Size>
 					<AbsDimension x="150" y="35"/>
 				</Size>
@@ -935,7 +936,7 @@
 						end
 					</OnClick>
 				</Scripts>
-			</Button>			
+			</Button> -->
 		</Frames>
 		<Layers>
 			<Layer level="OVERLAY">
