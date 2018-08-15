@@ -48,17 +48,6 @@ function Binder_OnLoad(self)
 			out_frame("  - /binder load (name) - Loads profile 'name', case sensitive");
 		end
 	end
-
-	
-	if LibStub then
-		if LibStub:GetLibrary("LibKeyBound-1.0") then
-			LibKeyBound = LibStub:GetLibrary("LibKeyBound-1.0")
-		else
-			out_frame("Binder Missing Dependecy: LibKeyBound-1.0")
-		end
-	else
-		out_frame("Binder Missing Dependecy: LibStub")
-	end
 end
 
 function Binder_OnEvent(self, event, ...)

@@ -96,7 +96,7 @@
 	<Frame name="Binder_Title" hidden="true" frameStrata="LOW" parent="UIParent">
 		<Layers>
 			<Layer level="ARTWORK">
-				<FontString name="$parent_Text1" inherits="GameFontNormal" text="Binder 2.7.0">
+				<FontString name="$parent_Text1" inherits="GameFontNormal" text="Binder 2.7.1">
 					<Anchors>
 						<Anchor point="CENTER"></Anchor>
 					</Anchors>
@@ -913,29 +913,7 @@
 						DeleteAll_Button_OnUpdate()
 					</OnUpdate>
 				</Scripts>
-			</Button>
-			
-			<Button name="KeyBound_Button" inherits="UIPanelButtonTemplate" text="Edit Keybinds">
-				<Size>
-					<AbsDimension x="150" y="35"/>
-				</Size>
-				<Anchors>
-					<Anchor point="CENTER" relativeTo="Options_Frame">
-						<Offset> <AbsDimension x="0" y="-4"/> </Offset>
-					</Anchor>
-				</Anchors>
-				<Scripts>
-					<OnClick>
-						if LibKeyBound then
-							LibKeyBound:Toggle()
-						else
-							error = "Missing Dependency: LibKeyBound-1.0 OR LibStub"
-							UIErrorsFrame:AddMessage(error, 1.0, 0, 0, 1, 10)
-							DEFAULT_CHAT_FRAME:AddMessage(error)
-						end
-					</OnClick>
-				</Scripts>
-			</Button>			
+			</Button>	
 		</Frames>
 		<Layers>
 			<Layer level="OVERLAY">
