@@ -2,6 +2,7 @@
 ProfileName_OnButton = "";
 Currently_Selected_Profile_Num = 0;
 Selection = false;
+Current_Specialization = 0;
 
 Binder_Settings = {
 	ProfilesCreated = 0,
@@ -30,6 +31,7 @@ end
 function Binder_OnLoad(self)
 	out_frame("Binder is Loaded. Use /binder for help");
 	self:RegisterEvent( "ADDON_LOADED" );
+	self:RegisterEvent( "ACTIVE_TALENT_GROUP_CHANGED" );
 
 	SLASH_BINDER1 = "/binder";
 	SlashCmdList["BINDER"] = function (cmd, editbox)
@@ -54,7 +56,15 @@ function Binder_OnEvent(self, event, ...)
 	if ( event == "ADDON_LOADED" ) then
 		Binder_MinimapButton_OnLoad();
 		Minimap_Options_WhenLoaded();
-	end		
+	elseif ( event == "ACTIVE_TALENT_GROUP_CHANGED" ) then
+		local currentSpec = GetSpecialization()
+		if Current_Specialization ~= currentSpec then
+			local currentSpecName = currentSpec and select(2, GetSpecializationInfo(currentSpec)) or "None"
+			out_frame("Specialization changed to: " .. currentSpecName)
+			Current_Specialization = currentSpec
+			Load_Profile(currentSpecName)
+		end
+	end
 end
 
 	
