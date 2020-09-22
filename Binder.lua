@@ -5,8 +5,8 @@ Selection = false;
 Current_Specialization = 0;
 
 Binder_Settings = {
-	ProfilesCreated = 0,
-	Profiles = {}
+	ProfilesCreated = 0;
+	Profiles = {};
 }
 
 BinderMinimapSettings = {
@@ -28,6 +28,12 @@ local function out(text)
 	UIErrorsFrame:AddMessage(text, 1.0, 1.0, 0, 1, 10)
 end
 
+function Binder_Debug(strName, tData) 
+	if ViragDevTool_AddData and false then
+		ViragDevTool_AddData(tData, strName)
+    end
+end
+
 function Binder_OnLoad(self)
 	out_frame("Binder is Loaded. Use /binder for help");
 	self:RegisterEvent( "ADDON_LOADED" );
@@ -42,7 +48,7 @@ function Binder_OnLoad(self)
 			Binder_Toggle();
 		elseif command == "info" then
 			out_frame("Created by: Tensai");
-			out_frame("Last updated: 10/25/2014")
+			out_frame("Last updated: 9/21/2020")
 			out_frame("Supports storing profiles of keybinds upto 2 keys per action.")
 		else
 			out_frame("Syntax for Binder slash commands:");
@@ -214,16 +220,35 @@ function Binder_CreateButton_OnEnter(self)
 	Binder_CreateButton_Details(GameTooltip)
 end
 
-
 function SaveCurrentBindsToProfile(profile_number)
-	for i = 1, GetNumBindings() do		
-		Binder_Settings.Profiles[profile_number].The_Binds[i] = {["TheAction"] = select(1, GetBinding(i))}
-		-- At some point blizzard modified how they display Keybinds to players to modify them. They added KeyBindingHeaders so that the keybind list would be more manageable. They apparently modified how GetBinding() works, it now returns TheAction(1) TheHeader(2) and all the keybinds(3 to n). This broke the system I was using which required TheAction(1), Bind1(2), Bind2(3). This caused errors for many players who seemingly had their keybinds just disappear. I know intelligently loop over all keybinds and store them, instead of just the first 2.
-		-- We start from (j=2) here so we skip the action for the binds. We could start from (j=3) and skip the "KeyBindingHeader", but some keybinds don't have a header, and starting at 3 would skip the first bind. So we will just let it silently fail when we try to later set a keybind to a keybind header.
-		for j = 2, select("#", GetBinding(i)) do
-			Binder_Settings.Profiles[profile_number].The_Binds[i]["Binding"..j-1] = select(j, GetBinding(i))
+	Binder_Settings.Profiles[profile_number].The_Binds = {}
+	for i = 1, GetNumBindings() do
+		-- Binder_Settings.Profiles[profile_number].The_Binds[i] = {["TheAction"] = select(1, GetBinding(i))}
+
+		-- At some point blizzard modified how they display Keybinds to players to modify them. They added KeyBindingHeaders
+		-- so that the keybind list would be more manageable. They apparently modified how GetBinding() works, it now
+		-- returns TheAction(1) TheHeader(2) and all the keybinds(3 to n). This broke the system I was using which required
+		-- TheAction(1), Bind1(2), Bind2(3). This caused errors for many players who seemingly had their keybinds just disappear.
+		-- I now loop over all keybinds and store them, instead of just the first 2.
+
+		-- We start from (j=2) here so we skip the action for the binds. We could start from (j=3) and skip the
+		-- "KeyBindingHeader", but some keybinds don't have a header, and starting at 3 would skip the first bind.
+		-- So we will just let it silently fail when we try to later set a keybind to a keybind header.
+
+		-- for j = 2, select("#", GetBinding(i)) do
+		-- 	Binder_Settings.Profiles[profile_number].The_Binds[i]["Binding"..j-1] = select(j, GetBinding(i))
+		-- end
+
+		-- This is the new and updated way (9/21/2020)
+		-- loading profile has version detection now so we can always create using the new format
+		local action = GetBinding(i)
+		Binder_Settings.Profiles[profile_number].The_Binds[action] = {}
+
+		for _, binding in pairs(Extract_Bindings(GetBinding(i))) do
+			table.insert(Binder_Settings.Profiles[profile_number].The_Binds[action], binding)
 		end
 	end
+	Binder_Debug("The_Binds", Binder_Settings.Profiles[profile_number].The_Binds)
 end
 
 --The Almighty Button that WILL create your new profile
@@ -416,11 +441,21 @@ function Apply_OnClick()
 	Load_Profile(ProfileName_OnButton);
 end
 
+-- This function will pull out and return only the actual bindings for a GetBinding() call
+function Extract_Bindings(command, category, ...)
+	-- GetBinding() returns multiple strings, this function allows us to extract all the keybinds for each action
+	-- local cmdName = _G["BINDING_NAME_" .. command]
+	-- local catName = _G[category]
+	-- Binder_Debug(("%s > %s (%s) is bound to:"):format(catName or "?", cmdName or "?", command), strjoin(", ", ...))
+	return {...}
+end
+
 function RemoveAllBinds()
 	for i = 1, GetNumBindings() do
-		command, key1, key2 = GetBinding(i);
-		if (key1) then SetBinding(key1); end
-		if (key2) then SetBinding(key2); end	
+		for _, binding in pairs(Extract_Bindings(GetBinding(i))) do
+			-- setting the binding with no key given will clear the binding
+			SetBinding(binding)
+		end
 	end
 end
 
@@ -432,30 +467,43 @@ function Load_Profile(profile_name)
 			break;
 		end
 	end
-
+	
 	if (Profile_Num == nil)then
 		out_frame("Binder Profile '"..profile_name.."' not found.")
 	else
 		RemoveAllBinds();
 		
-		for i = 1, GetNumBindings() do 
-			-- local TheAction = Binder_Settings.Profiles[Profile_Num].The_Binds[i].TheAction
-			-- local BindingOne = Binder_Settings.Profiles[Profile_Num].The_Binds[i].BindingOne
-			-- local BindingTwo = Binder_Settings.Profiles[Profile_Num].The_Binds[i].BindingTwo
+		-- https://wow.gamepedia.com/API_SetBinding
+		-- The Key Bindings UI will only show the first two bindings, but there is no limit to the number of keys that can be used for the same command.
 
-			for k, v in pairs(Binder_Settings.Profiles[Profile_Num].The_Binds[i]) do
-				if (k ~= "TheAction") then
-					SetBinding(v, Binder_Settings.Profiles[Profile_Num].The_Binds[i].TheAction)
+		-- This is a simple data version detection system. If the old data is detected it will use the old system to load it and update to the new system
+		if Binder_Settings.Profiles[Profile_Num].The_Binds[1] ~= nil then
+			Binder_Debug("Keybind strorage version", 1.0)
+			-- loop over all the actions and associated binds
+			for _, action_and_bindings in pairs(Binder_Settings.Profiles[Profile_Num].The_Binds) do
+				-- loop over each bind assigned to this action
+				local action = action_and_bindings.TheAction
+				for i, binding in pairs(action_and_bindings) do
+					-- skip over the action
+					if (i ~= 1)	then
+						-- The binds sometimes also contain the useless header
+						-- we just try to add that header as a keybind and it should fail silently.
+						SetBinding(binding, action)
+					end
 				end
 			end
-
-			-- if (BindingOne ~= nil)then
-			-- 	SetBinding(BindingOne, TheAction)
-			-- end				
-			-- if (BindingTwo ~= nil)then
-			-- 	SetBinding(BindingTwo, TheAction)
-			-- end
+			-- when a v1.0 data structure is loaded, convert it to a v2.0 data structure
+			SaveCurrentBindsToProfile(Profile_Num)
+		else
+			-- This is the more modernized appraoch to data storage
+			Binder_Debug("Keybind strorage version", 2.0)
+			for action, bindings in pairs(Binder_Settings.Profiles[Profile_Num].The_Binds) do
+				for _, binding in pairs(bindings) do
+					SetBinding(binding, action)
+				end
+			end
 		end
+
 	 
 		SaveBindings(2)
 		LoadBindings(2)
