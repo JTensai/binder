@@ -96,7 +96,7 @@
 	<Frame name="Binder_Title" hidden="true" frameStrata="LOW" parent="UIParent">
 		<Layers>
 			<Layer level="ARTWORK">
-				<FontString name="$parent_Text1" inherits="GameFontNormal" text="Binder 2.8.0">
+				<FontString name="$parent_Text1" inherits="GameFontNormal" text="Binder 2.8.1">
 					<Anchors>
 						<Anchor point="CENTER"></Anchor>
 					</Anchors>
