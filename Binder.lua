@@ -48,8 +48,8 @@ function Binder_OnLoad(self)
 			Binder_Toggle();
 		elseif command == "info" then
 			out_frame("Created by: Tensai");
-			out_frame("Last updated: 9/21/2020")
-			out_frame("Supports storing profiles of keybinds upto 2 keys per action.")
+			out_frame("Last updated: 12/31/2020")
+			out_frame("Supports storing profiles of keybinds.")
 		else
 			out_frame("Syntax for Binder slash commands:");
 			out_frame("  - /binder toggle - Toggles main binder window");
@@ -75,50 +75,47 @@ end
 
 	
 function Binder_Toggle()
-	-- local frame = getglobal("Binder_Frame")
 	Selection = false;
-	-- if (frame) then
-		if (  Binder_Frame:IsVisible()  ) then
-			--When the Frame Goes away
-			Binder_Frame:Hide();
-			Binder_Title:Hide();
-			Description_InputBox:Hide();
-			Name_Input_Frame:Hide();
-			ApplyOrDelete_Frame:Hide();
-			Description_Frame:Hide();
-			Selection_Frame:Hide();
-			Loading_Frame:Hide();
-			Options_Frame:Hide();
-			Creation_Frame:Hide();
-			Description_Input_Frame:Hide();
-			Divider_Frame1:Hide();
-			Divider_Frame2:Hide();
-			Name_InputBox:SetText("");
-			Description_InputBox:SetText("");
-		else
-			--When the Frame is Shown again
-			Binder_Frame:Show();
-			Binder_Title:Show();
-			Name_Input_Frame:Show();
-			Description_InputBox:Show();
-			ApplyOrDelete_Frame:Show();
-			Description_Frame:Show();
-			Selection_Frame:Show();
-			Loading_Frame:Show();
-			Options_Frame:Show();
-			Creation_Frame:Show();
-			Description_Input_Frame:Show();
-			Divider_Frame1:Show();
-			Divider_Frame2:Show();
-			Name_InputBox:SetText("");
-			Description_InputBox:SetText("");
-			BinderEntry1:UnlockHighlight();
-			BinderEntry2:UnlockHighlight();
-			BinderEntry3:UnlockHighlight();
-			BinderEntry4:UnlockHighlight();
-			BinderEntry5:UnlockHighlight();
-		end
-	-- end
+	if (  Binder_Frame:IsVisible()  ) then
+		--When the Frame Goes away
+		Binder_Frame:Hide();
+		Binder_Title:Hide();
+		Description_InputBox:Hide();
+		Name_Input_Frame:Hide();
+		ApplyOrDelete_Frame:Hide();
+		Description_Frame:Hide();
+		Selection_Frame:Hide();
+		Loading_Frame:Hide();
+		Options_Frame:Hide();
+		Creation_Frame:Hide();
+		Description_Input_Frame:Hide();
+		Divider_Frame1:Hide();
+		Divider_Frame2:Hide();
+		Name_InputBox:SetText("");
+		Description_InputBox:SetText("");
+	else
+		--When the Frame is Shown again
+		Binder_Frame:Show();
+		Binder_Title:Show();
+		Name_Input_Frame:Show();
+		Description_InputBox:Show();
+		ApplyOrDelete_Frame:Show();
+		Description_Frame:Show();
+		Selection_Frame:Show();
+		Loading_Frame:Show();
+		Options_Frame:Show();
+		Creation_Frame:Show();
+		Description_Input_Frame:Show();
+		Divider_Frame1:Show();
+		Divider_Frame2:Show();
+		Name_InputBox:SetText("");
+		Description_InputBox:SetText("");
+		BinderEntry1:UnlockHighlight();
+		BinderEntry2:UnlockHighlight();
+		BinderEntry3:UnlockHighlight();
+		BinderEntry4:UnlockHighlight();
+		BinderEntry5:UnlockHighlight();
+	end
 end
 
 
