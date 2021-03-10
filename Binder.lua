@@ -64,11 +64,13 @@ function Binder_OnEvent(self, event, ...)
 		Minimap_Options_WhenLoaded();
 	elseif ( event == "ACTIVE_TALENT_GROUP_CHANGED" ) then
 		local currentSpec = GetSpecialization()
+		local class = select(2, UnitClass("player"))
 		if Current_Specialization ~= currentSpec then
 			local currentSpecName = currentSpec and select(2, GetSpecializationInfo(currentSpec)) or "None"
 			out_frame("Specialization changed to: " .. currentSpecName)
 			Current_Specialization = currentSpec
-			Load_Profile(currentSpecName)
+			out_frame("Trying to load profile: " .. class .. "-" .. currentSpecName)
+			Load_Profile(class .. "-" .. currentSpecName)
 		end
 	end
 end
