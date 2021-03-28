@@ -65,11 +65,11 @@ function Binder_OnEvent(self, event, ...)
 	elseif ( event == "ACTIVE_TALENT_GROUP_CHANGED" ) then
 
 		local currentSpec = GetSpecialization()
-		local specProfileName = currentSpec and select(2, GetSpecializationInfo(currentSpec)) or "None"
+		local specName = currentSpec and select(2, GetSpecializationInfo(currentSpec)) or "None"
 		local specProfileExists = false
 
 		local class = UnitClass("player")
-		local classSpecProfileName = class .. "-" .. specProfileName
+		local classSpecProfileName = class .. "-" .. specName
 		local classSpecProfileExists = false 
 
     	-- Look for the existence of a profile named "class-spec" and "spec".
@@ -78,21 +78,21 @@ function Binder_OnEvent(self, event, ...)
 
 			if (profileName == classSpecProfileName) then
 				classSpecProfileExists = true
-			elseif (profileName == specProfileName) then
+			elseif (profileName == specName) then
 				specProfileExists = true
 			end
 		end
 
 		if Current_Specialization ~= currentSpec then
 			
-			out_frame("Specialization changed to: " .. specProfileName)
+			out_frame("Specialization changed to: " .. specName)
 			Current_Specialization = currentSpec
 
 			-- Use a "class-spec" profile over "spec", do nothing if none exist.
 			if (classSpecProfileExists) then 
 				Load_Profile(classSpecProfileName)
 			elseif (specProfileExists) then
-				Load_Profile(specProfileName)
+				Load_Profile(specName)
 			end
 
 		end
