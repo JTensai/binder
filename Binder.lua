@@ -63,13 +63,38 @@ function Binder_OnEvent(self, event, ...)
 		Binder_MinimapButton_OnLoad();
 		Minimap_Options_WhenLoaded();
 	elseif ( event == "ACTIVE_TALENT_GROUP_CHANGED" ) then
+
 		local currentSpec = GetSpecialization()
+		local specProfileName = currentSpec and select(2, GetSpecializationInfo(currentSpec)) or "None"
+		local specProfileExists = false
+
 		local class = UnitClass("player")
+		local classSpecProfileName = class .. "-" .. specProfileName
+		local classSpecProfileExists = false 
+
+    	-- Look for the existence of a profile named "class-spec" and "spec".
+		for i = 1, Binder_Settings.ProfilesCreated do 
+			local profileName = Binder_Settings.Profiles[i].Name
+
+			if (profileName == classSpecProfileName) then
+				classSpecProfileExists = true
+			elseif (profileName == specProfileName) then
+				specProfileExists = true
+			end
+		end
+
 		if Current_Specialization ~= currentSpec then
-			local currentSpecName = currentSpec and select(2, GetSpecializationInfo(currentSpec)) or "None"
-			out_frame("Specialization changed to: " .. currentSpecName)
+			
+			out_frame("Specialization changed to: " .. specProfileName)
 			Current_Specialization = currentSpec
-			Load_Profile(class .. "-" .. currentSpecName)
+
+			-- Use a "class-spec" profile over "spec", do nothing if none exist.
+			if (classSpecProfileExists) then 
+				Load_Profile(classSpecProfileName)
+			elseif (specProfileExists) then
+				Load_Profile(specProfileName)
+			end
+
 		end
 	end
 end
