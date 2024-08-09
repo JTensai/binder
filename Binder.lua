@@ -48,7 +48,7 @@ function Binder_OnLoad(self)
 			Binder_Toggle();
 		elseif command == "info" then
 			out_frame("Created by: Tensai");
-			out_frame("Last updated: 12/31/2020")
+			out_frame("Last updated: 8/9/2024")
 			out_frame("Supports storing profiles of keybinds.")
 		else
 			out_frame("Syntax for Binder slash commands:");

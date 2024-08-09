@@ -43,7 +43,7 @@
 	
 	
 	--Main Frame used in Binder
-	<Frame name="Binder_Frame" hidden="true" frameStrata="LOW" parent="UIParent" movable="true" enableMouse="true" inherits="BackdropTemplate">
+	<Frame name="Binder_Frame" hidden="true" frameStrata="HIGH" parent="UIParent" movable="true" toplevel="true" enableMouse="true" inherits="BackdropTemplate">
 		<Size>
 			<AbsDimension x="600" y="390"/>
 		</Size>
@@ -70,12 +70,8 @@
 			<Button name="$parent_Button3" inherits="UIPanelCloseButton">
 				<Scripts>
 					<OnClick> Binder_Toggle()</OnClick>
-					<OnEnter>
-						Close_Button_OnEnter(self)
-					</OnEnter>
-					<OnLeave>
-						GameTooltip:Hide()
-					</OnLeave>
+					<OnEnter>Close_Button_OnEnter(self)</OnEnter>
+					<OnLeave>GameTooltip:Hide()</OnLeave>
 				</Scripts>
 				<Anchors>
 					<Anchor point="TOPRIGHT">
@@ -89,10 +85,10 @@
 	</Frame>
 
 	--Small Title frame above normal Frame
-	<Frame name="Binder_Title" hidden="true" frameStrata="LOW" parent="UIParent" inherits="BackdropTemplate">
+	<Frame name="Binder_Title" hidden="true" parent="Binder_Frame" inherits="BackdropTemplate">
 		<Layers>
 			<Layer level="ARTWORK">
-				<FontString name="$parent_Text1" inherits="GameFontNormal" text="Binder 2.8.2">
+				<FontString name="$parent_Text1" inherits="GameFontNormal" text="Binder 2.9.0">
 					<Anchors>
 						<Anchor point="CENTER"></Anchor>
 					</Anchors>
@@ -126,7 +122,7 @@
 	
 	 
 	 --Loading Frame
-	<Frame name="Loading_Frame" hidden="true" parent="UIParent">
+	<Frame name="Loading_Frame" hidden="true" parent="Binder_Frame">
 		<Size>
 			<AbsDimension x="300" y="400"/>
 		</Size>
@@ -142,7 +138,7 @@
 
 	 
 		--Selection Frame
-	<Frame name="Selection_Frame" hidden="true" parent="UIParent">
+	<Frame name="Selection_Frame" hidden="true" parent="Binder_Frame">
 		<Size>
 			<AbsDimension x="262" y="120"/>
 		</Size>
@@ -280,7 +276,7 @@
 	</Frame>
 	 
 		--Description Frame
-	<Frame name="Description_Frame" hidden="true" parent="UIParent" inherits="BackdropTemplate">
+	<Frame name="Description_Frame" hidden="true" parent="Binder_Frame" inherits="BackdropTemplate">
 		<Size>
 			<AbsDimension x="256" y="88"/>
 		</Size>
@@ -299,8 +295,8 @@
 							</Offset>
 						</Anchor>
 					</Anchors>
-          			<Color r="1" g="1" b="1" a="1" />
-        		</FontString>
+          <Color r="1" g="1" b="1" a="1" />
+        </FontString>
 			</Layer>
 			<Layer>
 				<FontString name="$parent_Text2" inherits="GameFontNormal"  justifyH="LEFT" justifyV="TOP" text="(none)" nonspacewrap="false" maxLines="5">
@@ -316,8 +312,8 @@
 							</Offset>
 						</Anchor>
 					</Anchors>
-          			<Color r="1" g="1" b="1" a="1" />
-	      		</FontString>
+          <Color r="1" g="1" b="1" a="1" />
+	      </FontString>
 			</Layer>
 		</Layers>
 		<Scripts>
@@ -335,7 +331,7 @@
 	</Frame>
 	 
 		--Button Frame
-	<Frame name="ApplyOrDelete_Frame" hidden="true" parent="UIParent">
+	<Frame name="ApplyOrDelete_Frame" hidden="true" parent="Binder_Frame">
 		<Size>
 			<AbsDimension x="270" y="125"/>
 		</Size>
@@ -448,7 +444,7 @@
 	 </Frame>
 	 
 	--Update Confirm Frame
-	<Frame name="Update_Confirm_Frame" hidden="true" frameStrata="High" parent="UIParent" inherits="BackdropTemplate">
+	<Frame name="Update_Confirm_Frame" hidden="true" frameStrata="Dialog" parent="Binder_Frame" inherits="BackdropTemplate">
 		<Size>
 			<AbsDimension x="350" y="95"/>
 		</Size>
@@ -525,7 +521,7 @@
 
 	 
 	--Are you sure frame
-	<Frame name="Areyousure_Frame" hidden="true" frameStrata="High" parent="UIParent" inherits="BackdropTemplate">
+	<Frame name="Areyousure_Frame" hidden="true" frameStrata="Dialog" parent="Binder_Frame" inherits="BackdropTemplate">
 		<Size>
 			<AbsDimension x="250" y="95"/>
 		</Size>
@@ -600,7 +596,7 @@
 	 
 	 
 	 --Creation Frame
-	<Frame name="Creation_Frame" hidden="true" parent="UIParent">
+	<Frame name="Creation_Frame" hidden="true" parent="Binder_Frame">
 		<Size>
 			<AbsDimension x="300" y="200"/>
 		</Size>
@@ -657,7 +653,7 @@
 	</Frame>
 	 
 		--Name Input Frame
-	<Frame name="Name_Input_Frame" parent="UIParent" hidden="true">
+	<Frame name="Name_Input_Frame" parent="Binder_Frame" hidden="true">
 		<Size>
 			<AbsDimension x="275" y="30"/>
 		</Size>
@@ -704,7 +700,7 @@
 	</Frame>
 	 
 		--Description Input Frame
-	<Frame name="Description_Input_Frame" parent="UIParent" hidden="true">
+	<Frame name="Description_Input_Frame" parent="Binder_Frame" hidden="true">
 		<Size>
 			<AbsDimension x="275" y="100"/>
 		</Size>
@@ -753,7 +749,7 @@
 	 
 	 
 	 --Options Frame
-	<Frame name="Options_Frame" hidden="true" toplevel="true" parent="UIParent">
+	<Frame name="Options_Frame" hidden="true" toplevel="true" parent="Binder_Frame">
 		<Size>
 			<AbsDimension x="300" y="190"/>
 		</Size>
@@ -916,7 +912,7 @@
 	
 	
 	--Divider Frame 1
-	<Frame name="Divider_Frame1" hidden="true" toplevel="false" parent="UIParent">
+	<Frame name="Divider_Frame1" hidden="true" toplevel="false" parent="Binder_Frame">
 		<Size>
 			<AbsDimension x="2" y="360"/>
 		</Size>
@@ -938,7 +934,7 @@
 	</Frame>
 	
 	--Divider Frame 2
-	<Frame name="Divider_Frame2" hidden="true" toplevel="false" parent="UIParent">
+	<Frame name="Divider_Frame2" hidden="true" toplevel="false" parent="Binder_Frame">
 		<Size>
 			<AbsDimension x="270" y="2"/>
 		</Size>
@@ -970,7 +966,7 @@
 		for his format which helped greatly in the making of the minimap button
 	--And also to Shurshik for the Hover over tooltip
 	
-	<Button name="Binder_MinimapButton" enableMouse="true" movable="true" hidden="true" parent="Minimap" frameStrata="MEDIUM">
+	<Button name="Binder_MinimapButton" enableMouse="true" movable="true" hidden="true" parent="Minimap" frameStrata="HIGH">
 		<Size>
 			<AbsDimension x="34.32" y="34.32"/>
 		</Size>
