@@ -47,7 +47,7 @@ function Binder_OnLoad(self)
 		elseif command == "toggle" then
 			Binder_Toggle();
 		elseif command == "info" then
-			out_frame("Created by: Tensai");
+			out_frame("Created by: Tensigh");
 			out_frame("Last updated: 8/9/2024")
 			out_frame("Supports storing profiles of keybinds.")
 		else

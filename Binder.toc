@@ -1,6 +1,6 @@
 ## Interface: 110000, 110002
 ## Title: Binder
-## Author: Tensai
+## Author: Tensigh
 ## Version: 2.9.0
 ## Notes: Addon that allows user to create Keybinding Profiles, for easy switching between different sets. Supports up to 2 keys per action.
 ## SavedVariablesPerCharacter: BinderMinimapSettings
