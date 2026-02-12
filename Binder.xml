@@ -90,7 +90,7 @@
 	<Frame name="Binder_Title" hidden="true" parent="Binder_Frame" inherits="BackdropTemplate">
 		<Layers>
 			<Layer level="ARTWORK">
-				<FontString name="$parent_Text1" inherits="GameFontNormal" text="Binder 2.9.1">
+				<FontString name="$parent_Text1" inherits="GameFontNormal" text="Binder 2.9.2">
 					<Anchors>
 						<Anchor point="CENTER"></Anchor>
 					</Anchors>
