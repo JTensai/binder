@@ -1,7 +1,7 @@
-## Interface: 110000, 110002
+## Interface: 120001
 ## Title: Binder
 ## Author: Tensigh
-## Version: 2.9.0
+## Version: 2.9.1
 ## Notes: Addon that allows user to create Keybinding Profiles, for easy switching between different sets. Naming a profile after your Spec (e.g. Shadow) or Class-Spec (e.g. Priest-Holy) will auto apply that profile when you switch to that spec. Credit to github users jokaah and aza547 for adding that feature.
 ## SavedVariablesPerCharacter: BinderMinimapSettings
 ## SavedVariables: Binder_Settings

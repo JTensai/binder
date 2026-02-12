@@ -56,13 +56,15 @@
 			<OnDragStop> self:StopMovingOrSizing(); </OnDragStop>
 			<OnLoad>
 				tinsert(UISpecialFrames,self:GetName());
-				self:SetBackdrop({
-					bgFile = [[Interface\DialogFrame\UI-DialogBox-Background]],
-					edgeFile = [[Interface\DialogFrame\UI-DialogBox-Border]],
-					tileSize = 32,
-					edgeSize = 32,
-					insets = {left = 10, right = 10, top = 10, bottom = 10}
-				});
+				if self.SetBackdrop then
+					self:SetBackdrop({
+						bgFile = [[Interface\DialogFrame\UI-DialogBox-Background]],
+						edgeFile = [[Interface\DialogFrame\UI-DialogBox-Border]],
+						tileSize = 32,
+						edgeSize = 32,
+						insets = {left = 10, right = 10, top = 10, bottom = 10}
+					});
+				end
 			</OnLoad>
 		</Scripts>
 		<!--The close button in the top right-->
@@ -88,7 +90,7 @@
 	<Frame name="Binder_Title" hidden="true" parent="Binder_Frame" inherits="BackdropTemplate">
 		<Layers>
 			<Layer level="ARTWORK">
-				<FontString name="$parent_Text1" inherits="GameFontNormal" text="Binder 2.9.0">
+				<FontString name="$parent_Text1" inherits="GameFontNormal" text="Binder 2.9.1">
 					<Anchors>
 						<Anchor point="CENTER"></Anchor>
 					</Anchors>
@@ -108,13 +110,15 @@
 		<Scripts>
 			<OnLoad>
 				tinsert(UISpecialFrames,self:GetName());
-				self:SetBackdrop ({
-					bgFile = [[Interface\DialogFrame\UI-DialogBox-Background]],
-					edgeFile = [[Interface\DialogFrame\UI-DialogBox-Border]],
-					tileSize = 16,
-					edgeSize = 20,
-					insets = {left = 5, right = 5, top = 5, bottom = 5}}
-				);
+				if self.SetBackdrop then
+					self:SetBackdrop ({
+						bgFile = [[Interface\DialogFrame\UI-DialogBox-Background]],
+						edgeFile = [[Interface\DialogFrame\UI-DialogBox-Border]],
+						tileSize = 16,
+						edgeSize = 20,
+						insets = {left = 5, right = 5, top = 5, bottom = 5}}
+					);
+				end
 			</OnLoad>
 		</Scripts>
 	</Frame>
@@ -284,7 +288,7 @@
 			<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="Selection_Frame">
 				<Offset> <Absdimension x="0" y="-32.5"/> </Offset>
 			</Anchor>
-		</Anchors>z
+		</Anchors>
 		<Layers>
 			<Layer>
 				<FontString name="$parent_Text1" inherits="GameFontNormal"  justifyH="LEFT" text="Description:">
@@ -322,10 +326,12 @@
 			</OnUpdate>
 			<OnLoad>
 				tinsert(UISpecialFrames,self:GetName());
-				self:SetBackdrop ({
-					edgeFile = [[Interface\DialogFrame\UI-DialogBox-Border]],
-					edgeSize = 16
-				});
+				if self.SetBackdrop then
+					self:SetBackdrop ({
+						edgeFile = [[Interface\DialogFrame\UI-DialogBox-Border]],
+						edgeSize = 16
+					});
+				end
 			</OnLoad>
 		</Scripts>
 	</Frame>
@@ -376,9 +382,6 @@
 					<OnLeave>
 						GameTooltip:Hide()
 					</OnLeave>
-					<OnUpdate> 
-						Apply_Button_OnUpdate()
-					</OnUpdate>
 				</Scripts>
 			</Button>
 			<Button name="Delete_Button" inherits="UIPanelButtonTemplate" text="Delete">
@@ -402,9 +405,6 @@
 					<OnLeave>
 						GameTooltip:Hide()
 					</OnLeave>
-					<OnUpdate> 
-						Delete_Button_OnUpdate()
-					</OnUpdate>
 				</Scripts>				
 			</Button>
 
@@ -429,9 +429,6 @@
 					<OnLeave>
 						GameTooltip:Hide()
 					</OnLeave>
-					<OnUpdate> 
-						Update_Button_OnUpdate()
-					</OnUpdate>
 				</Scripts>
 			</Button>
 
@@ -454,13 +451,15 @@
 		<Scripts>
 			<OnLoad>
 				tinsert(UISpecialFrames,self:GetName());
-				self:SetBackdrop ({
-					bgFile = [[Interface\DialogFrame\UI-DialogBox-Background]],
-					edgeFile = [[Interface\DialogFrame\UI-DialogBox-Border]],
-					tileSize = 32,
-					edgeSize = 32,
-					insets = {left = 10, right = 10, top = 10, bottom = 10}}
-				);
+				if self.SetBackdrop then
+					self:SetBackdrop ({
+						bgFile = [[Interface\DialogFrame\UI-DialogBox-Background]],
+						edgeFile = [[Interface\DialogFrame\UI-DialogBox-Border]],
+						tileSize = 32,
+						edgeSize = 32,
+						insets = {left = 10, right = 10, top = 10, bottom = 10}}
+					);
+				end
 			</OnLoad>
 		</Scripts>
 		<Frames>
@@ -531,13 +530,15 @@
 		<Scripts>
 			<OnLoad>
 				tinsert(UISpecialFrames,self:GetName());
-				self:SetBackdrop ({
-					bgFile = [[Interface\DialogFrame\UI-DialogBox-Background]],
-					edgeFile = [[Interface\DialogFrame\UI-DialogBox-Border]],
-					tileSize = 32,
-					edgeSize = 32,
-					insets = {left = 10, right = 10, top = 10, bottom = 10}}
-				);
+				if self.SetBackdrop then
+					self:SetBackdrop ({
+						bgFile = [[Interface\DialogFrame\UI-DialogBox-Background]],
+						edgeFile = [[Interface\DialogFrame\UI-DialogBox-Border]],
+						tileSize = 32,
+						edgeSize = 32,
+						insets = {left = 10, right = 10, top = 10, bottom = 10}}
+					);
+				end
 			</OnLoad>
 		</Scripts>
 		<Frames>
@@ -770,7 +771,7 @@
         </Anchors>      
         <Scripts>
           <OnLoad>
-            getglobal(self:GetName().."Text"):SetText("Show Minimap Button");
+            _G[self:GetName().."Text"]:SetText("Show Minimap Button");
           </OnLoad>
 					<OnUpdate>
 						Minimap_Options_OnUpdate();
@@ -814,7 +815,7 @@
 				</Anchors>
 				<Scripts>
 					<OnLoad>
-						getglobal(self:GetName().."Text"):SetText("Free to Move");
+						_G[self:GetName().."Text"]:SetText("Free to Move");
 					</OnLoad>
 					<OnClick>
 						Options_Frame_RadioButton1:SetChecked(true)
@@ -836,7 +837,7 @@
 				</Anchors>
 				<Scripts>
 					<OnLoad>
-						getglobal(self:GetName().."Text"):SetText("Locked to Minimap");
+						_G[self:GetName().."Text"]:SetText("Locked to Minimap");
 					</OnLoad>
 					<OnClick>
 						Options_Frame_RadioButton1:SetChecked(false)

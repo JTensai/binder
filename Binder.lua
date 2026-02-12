@@ -28,16 +28,19 @@ local function out(text)
 	UIErrorsFrame:AddMessage(text, 1.0, 1.0, 0, 1, 10)
 end
 
+local BINDER_DEBUG_ENABLED = false
+
 function Binder_Debug(strName, tData) 
-	if ViragDevTool_AddData and false then
+	if BINDER_DEBUG_ENABLED and ViragDevTool_AddData then
 		ViragDevTool_AddData(tData, strName)
-    end
+	end
 end
 
 function Binder_OnLoad(self)
 	out_frame("Binder is Loaded. Use /binder for help");
 	self:RegisterEvent( "ADDON_LOADED" );
-	self:RegisterEvent( "ACTIVE_TALENT_GROUP_CHANGED" );
+	self:RegisterEvent( "PLAYER_LOGIN" );
+	self:RegisterEvent( "PLAYER_SPECIALIZATION_CHANGED" );
 
 	SLASH_BINDER1 = "/binder";
 	SlashCmdList["BINDER"] = function (cmd, editbox)
@@ -48,7 +51,7 @@ function Binder_OnLoad(self)
 			Binder_Toggle();
 		elseif command == "info" then
 			out_frame("Created by: Tensigh");
-			out_frame("Last updated: 8/9/2024")
+			out_frame("Last updated: 2/7/2026")
 			out_frame("Supports storing profiles of keybinds.")
 		else
 			out_frame("Syntax for Binder slash commands:");
@@ -62,46 +65,52 @@ function Binder_OnEvent(self, event, ...)
 	if ( event == "ADDON_LOADED" ) then
 		Binder_MinimapButton_OnLoad();
 		Minimap_Options_WhenLoaded();
-	elseif ( event == "ACTIVE_TALENT_GROUP_CHANGED" ) then
-
-		local currentSpec = GetSpecialization()
-		local specName = currentSpec and select(2, GetSpecializationInfo(currentSpec)) or "None"
-		local specProfileExists = false
-
-		local class = UnitClass("player")
-		local classSpecProfileName = class .. "-" .. specName
-		local classSpecProfileExists = false 
-
-    	-- Look for the existence of a profile named "class-spec" and "spec".
-		for i = 1, Binder_Settings.ProfilesCreated do 
-			local profileName = Binder_Settings.Profiles[i].Name
-
-			if (profileName == classSpecProfileName) then
-				classSpecProfileExists = true
-			elseif (profileName == specName) then
-				specProfileExists = true
-			end
+	elseif ( event == "PLAYER_LOGIN" ) then
+		Binder_HandleSpecializationChange()
+	elseif ( event == "PLAYER_SPECIALIZATION_CHANGED" ) then
+		local unit = ...
+		if unit == "player" then
+			Binder_HandleSpecializationChange()
 		end
+	end
+end
 
-		if Current_Specialization ~= currentSpec then
-			
-			out_frame("Specialization changed to: " .. specName)
-			Current_Specialization = currentSpec
+function Binder_HandleSpecializationChange()
+	local currentSpec = GetSpecialization()
+	local specName = currentSpec and select(2, GetSpecializationInfo(currentSpec)) or "None"
+	local specProfileExists = false
 
-			-- Use a "class-spec" profile over "spec", do nothing if none exist.
-			if (classSpecProfileExists) then 
-				Load_Profile(classSpecProfileName)
-			elseif (specProfileExists) then
-				Load_Profile(specName)
-			end
+	local class = UnitClass("player")
+	local classSpecProfileName = class .. "-" .. specName
+	local classSpecProfileExists = false
 
+	-- Look for the existence of a profile named "class-spec" and "spec".
+	for i = 1, Binder_Settings.ProfilesCreated do
+		local profileName = Binder_Settings.Profiles[i].Name
+
+		if (profileName == classSpecProfileName) then
+			classSpecProfileExists = true
+		elseif (profileName == specName) then
+			specProfileExists = true
+		end
+	end
+
+	if Current_Specialization ~= currentSpec then
+		out_frame("Specialization changed to: " .. specName)
+		Current_Specialization = currentSpec
+
+		-- Use a "class-spec" profile over "spec", do nothing if none exist.
+		if (classSpecProfileExists) then
+			Load_Profile(classSpecProfileName)
+		elseif (specProfileExists) then
+			Load_Profile(specName)
 		end
 	end
 end
 
 	
 function Binder_Toggle()
-	Selection = false;
+	Binder_SetSelection(false);
 	if (  Binder_Frame:IsVisible()  ) then
 		--When the Frame Goes away
 		Binder_Frame:Hide();
@@ -154,43 +163,22 @@ function BinderScrollBar_Update()
 	for line = 1, 5 do 
 		lineplusoffset = line + FauxScrollFrame_GetOffset(BinderScrollBar);
 		if ( lineplusoffset < (Binder_Settings.ProfilesCreated + 1) ) then
-			getglobal("BinderEntry"..line):SetText(Binder_Settings.Profiles[lineplusoffset].Name);
-			getglobal("BinderEntry"..line):Show();
+			_G["BinderEntry"..line]:SetText(Binder_Settings.Profiles[lineplusoffset].Name);
+			_G["BinderEntry"..line]:Show();
 		else
-			getglobal("BinderEntry"..line):Hide();
+			_G["BinderEntry"..line]:Hide();
 		end
 	end
 	
-	if (Currently_Selected_Profile_Num == 0)then
-	else
-		if (BinderEntry1:GetText() == Binder_Settings.Profiles[Currently_Selected_Profile_Num].Name) then
-			BinderEntry1:LockHighlight()
+	if (Currently_Selected_Profile_Num ~= 0) then
+		local selectedName = Binder_Settings.Profiles[Currently_Selected_Profile_Num].Name
+		for i = 1, 5 do
+			local entry = _G["BinderEntry"..i]
+			if (entry:GetText() == selectedName) then
+				entry:LockHighlight()
 			else
-			BinderEntry1:UnlockHighlight();
-		end
-		
-		if (BinderEntry2:GetText() == Binder_Settings.Profiles[Currently_Selected_Profile_Num].Name) then
-			BinderEntry2:LockHighlight()
-			else
-			BinderEntry2:UnlockHighlight();
-		end
-		
-		if (BinderEntry3:GetText() == Binder_Settings.Profiles[Currently_Selected_Profile_Num].Name) then
-			BinderEntry3:LockHighlight()
-			else
-			BinderEntry3:UnlockHighlight();
-		end
-			
-		if (BinderEntry4:GetText() == Binder_Settings.Profiles[Currently_Selected_Profile_Num].Name) then
-			BinderEntry4:LockHighlight()
-			else
-			BinderEntry4:UnlockHighlight();
-		end
-			
-		if (BinderEntry5:GetText() == Binder_Settings.Profiles[Currently_Selected_Profile_Num].Name) then
-			BinderEntry5:LockHighlight()
-			else
-			BinderEntry5:UnlockHighlight();
+				entry:UnlockHighlight()
+			end
 		end
 	end
 end
@@ -201,23 +189,20 @@ function ProfileSelection_OnClick(self)
 	
 	--Sets Currently_Selected_Profile_Num to the profile number on button you pushed
 	for i = 1, Binder_Settings.ProfilesCreated do 
-		if ( ProfileName_OnButton ~= Binder_Settings.Profiles[i].Name )then
-		end
-		if ( ProfileName_OnButton == Binder_Settings.Profiles[i].Name )then
+		if ( ProfileName_OnButton == Binder_Settings.Profiles[i].Name ) then
 			Currently_Selected_Profile_Num = i
+			break
 		end
 	end
 	Description_Update(Currently_Selected_Profile_Num)
-	Selection = true
+	Binder_SetSelection(true)
 	
 	BinderScrollBar_Update()	
 end
 	
 function Description_Update(profilenum)
-	if (profilenum == nil)then
-	else
-		Description_Frame_Text2:SetText(Binder_Settings.Profiles[profilenum].Description)
-	end
+	if profilenum == nil or profilenum == 0 then return end
+	Description_Frame_Text2:SetText(Binder_Settings.Profiles[profilenum].Description)
 end
 
 ----------------------------------------------------------------------
@@ -280,17 +265,17 @@ function Create_OnClick(arg1)
 	local exists = false;
 	
 	for i = 1, Binder_Settings.ProfilesCreated do 
-		namecheck = Binder_Settings.Profiles[i].Name
+		local namecheck = Binder_Settings.Profiles[i].Name
 		if (Name_InputBox:GetText() == namecheck) then
 			exists = true
 			out_frame("Profile '"..Binder_Settings.Profiles[i].Name.."' not created because it already exists.")
 			out("Profile '"..Binder_Settings.Profiles[i].Name.."' not created because it already exists.")
 			Name_InputBox:SetText("")
+			break
 		end
 	end
 	
-	if (exists == true)then
-	else
+	if (not exists) then
 		local NewProfileNum = Binder_Settings.ProfilesCreated +1;
 		Binder_Settings.Profiles[NewProfileNum] = { Name = Name_InputBox:GetText(), Description = Description_InputBox:GetText(), The_Binds = {} }
 							
@@ -483,7 +468,7 @@ function RemoveAllBinds()
 end
 
 function Load_Profile(profile_name)
-	Profile_Num = nil;
+	local Profile_Num = nil;
 	for i = 1, Binder_Settings.ProfilesCreated do
 		if ( profile_name == Binder_Settings.Profiles[i].Name )then
 			Profile_Num = i;
@@ -535,14 +520,18 @@ function Load_Profile(profile_name)
 end
 
 
-function Apply_Button_OnUpdate()
-	
-	if (Selection == false) then
-		Apply_Button:Disable()
-		end
-	if (Selection == true) then
+-- Reactively update button states when selection changes
+function Binder_SetSelection(value)
+	Selection = value
+	if Selection then
 		Apply_Button:Enable()
-		end
+		Delete_Button:Enable()
+		Update_Button:Enable()
+	else
+		Apply_Button:Disable()
+		Delete_Button:Disable()
+		Update_Button:Disable()
+	end
 end
 
 function Binder_ApplyButton_Details(tt, ldb)
@@ -565,15 +554,7 @@ function Update_Profile()
 	out_frame("Binder Profile: "..Binder_Settings.Profiles[Currently_Selected_Profile_Num].Name..", has been updated to current Binds.")
 end
 
-function Update_Button_OnUpdate()
-	
-	if (Selection == false) then
-		Update_Button:Disable()
-		end
-	if (Selection == true) then
-		Update_Button:Enable()
-		end
-end
+
 
 function Binder_UpdateButton_Details(tt, ldb)
 	tt:SetText("This Button will Update|nthe Bindings of the currently|nselected Binder profile")
@@ -614,24 +595,16 @@ function Delete_OnClick(arg1)
 	
 	Binder_Settings.ProfilesCreated = Binder_Settings.ProfilesCreated-1
 	Currently_Selected_Profile_Num = 0
-	Selection = false
+	Binder_SetSelection(false)
 	BinderScrollBar_Update()	
 end
 
 function Hide_Areyousure()
 	Areyousure_Frame:Hide()
-	Selection = false
+	Binder_SetSelection(false)
 end
 
-function Delete_Button_OnUpdate()
-	if (Selection == false) then
-		Delete_Button:Disable()
-	end
-	
-	if (Selection == true) then
-		Delete_Button:Enable()
-	end
-end
+
 
 function DeleteAll_Button_OnClick()
 	for i = 1, Binder_Settings.ProfilesCreated do
@@ -644,15 +617,11 @@ function DeleteAll_Button_OnClick()
 end
 
 function DeleteAll_Button_OnUpdate()
-	
-	if (Currently_Selected_Profile_Num == 0)then
+	if (Currently_Selected_Profile_Num ~= 0) and
+	   (Binder_Settings.Profiles[Currently_Selected_Profile_Num].Name == "Delete All") then
+		DeleteAll_Button:Enable()
 	else
-		if (Binder_Settings.Profiles[Currently_Selected_Profile_Num].Name == "Delete All") then
-			DeleteAll_Button:Enable()
-			
-		else 
-			DeleteAll_Button:Disable()
-		end
+		DeleteAll_Button:Disable()
 	end
 end
 
