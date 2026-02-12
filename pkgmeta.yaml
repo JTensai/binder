@@ -1,0 +1,8 @@
+package-as: Binder
+
+ignore:
+  - README.md
+  - LICENSE
+  - .gitignore
+  - .pkgmeta
+  - pkgmeta.yaml
